@@ -1,0 +1,139 @@
+﻿@using PagedList.Mvc;
+@model PagedList.IPagedList<UniteHere.eMemberRegAppWeb.Models.EMemberRegistrationViewModel>
+
+@{
+  ViewBag.Title = "Index";
+}
+<h3>Registrations History</h3>
+<hr />
+
+@using (Html.BeginForm("History", "EMemberRegistration", FormMethod.Get)) {
+<div class="col-md-12">
+    <div class="col-md-2">
+        <input type="submit" name="submit" value="Search" />
+    </div>
+    <div class="col-md-4">
+        <b>Name/SSN/Id</b> @Html.TextBox("searchFilter", ViewBag.CurrentFilter as string)
+    </div>
+    <div class="col-md-5">
+        <b>Date</b> @Html.TextBox("min_date", ViewBag.MinDate as string) <span> - </span>@Html.TextBox("max_date", ViewBag.MaxDate as string)
+    </div>
+    <div class="col-md-2">
+        @Html.CheckBox("includeDiscarded", ViewBag.IncludeDiscarded != null ? (bool)ViewBag.IncludeDiscarded : true) <b>Include Discarded</b>
+    </div>
+</div>
+}
+<table class="table">
+    <tr>
+        <th></th>
+        <th>
+            @Html.Label("Name")
+        </th>
+        <th>
+            @Html.Label("Mobile")
+        </th>
+        <th>
+            @Html.Label("Employer")
+        </th>
+        <th>
+            @Html.Label("Position")
+        </th>
+        <th>
+            @*@Html.Label("Deduction")<br />@Html.Label("Opt Out")*@
+            @Html.Label("Checkoff")
+        </th>
+        <th>
+            @Html.Label("SMS")
+        </th>
+        <th>
+            @Html.Label("TIP")
+        </th>
+        <th>
+            @Html.Label("Hire Date")
+        </th>
+        <th>
+            @Html.Label("SSN")
+        </th>
+        @*<th>
+                @Html.DisplayNameFor(model => model.LocalNumber)
+            </th>*@
+        @*<th>
+            @Html.Label("TIMSS Id")
+        </th>*@
+        <th>
+            @Html.Label("Registration Date")
+        </th>
+        <th>
+           @Html.Label("Dues")<br />@Html.Label("Card")
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Processed_Status)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.First_Name) @Html.DisplayFor(modelItem => item.Middle_Name) @Html.DisplayFor(modelItem => item.Last_Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Mobile_Phone)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Employer_Union_Id)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Position)
+        </td>
+        <td>
+            @{
+              bool checkoff = !item.Deduction_Opt_Out_Flag;
+            @Html.DisplayFor(modelItem => checkoff)
+            }
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Sms_Opt_In_Flag)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Tip_Contribution)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Date_Of_Hire)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Ssn).ToString().Substring(7, 4)
+        </td>
+        @*<td>
+                @Html.DisplayFor(modelItem => item.LocalNumber)
+            </td>*@
+        @*<td>
+            @Html.DisplayFor(modelItem => item.Member_Union_Id)
+        </td>*@
+        <td>
+            @{
+              var registeredOn = item.CreatedOn.ToString("G");
+            <p>@registeredOn</p>
+            }
+        </td>
+        <td>
+            @*@{
+                  var pdfUrl = "/DuesCardFiles/" + HttpUtility.UrlPathEncode(item.Dues_Card_File_Name);
+                <a href=@pdfUrl>pdf</a>
+                }*@
+            @Html.ActionLink("pdf", "DisplaySuccessfulDuesCardPdf", new { fileName = item.Dues_Card_File_Name, id = item.Id })
+        </td>
+        <td>
+            @*@Html.ActionLink("Edit", "Edit", new { id=item.Id }) |*@
+            @Html.ActionLink("Details", "Details", new { id = item.Id }) @* |
+                @Html.ActionLink("Delete", "Delete", new { id=item.Id })*@
+        </td>
+    </tr>
+              }
+
+</table>
+<div class="text-center">
+    Total Count: @Model.TotalItemCount <br />
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+    @Html.PagedListPager(Model, page => Url.Action("History", new { page, searchFilter = ViewBag.CurrentFilter, min_Date = ViewBag.MinDate, max_date = ViewBag.MaxDate, includeDiscarded = ViewBag.IncludeDiscarded }))
+</div>

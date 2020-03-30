@@ -1,0 +1,61 @@
+﻿
+@{
+  ViewBag.Title = "GetBirthdayReportParams";
+  var fromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+
+  var toDate = DateTime.Today.Date;
+}
+
+<h2>eMember Birthdate Report</h2>
+
+@using (Html.BeginForm("GetBirthdayReport", "Report")) {
+@Html.AntiForgeryToken()
+<div class="form-horizontal">
+    <div class="form-group">
+        <div class="col-xs-6 col-sm-4 pull-left">
+            <table class="table">
+                <tr>
+                    <th></th>
+                    <th>
+                        @Html.Label("From Date")
+                    </th>
+                    <th>
+                        @Html.Label("To Date")
+                    </th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        @Html.TextBox("from_date", fromDate, "{0:MM/dd/yyyy}")
+                    </td>
+                    <td>
+                        @Html.TextBox("to_date", toDate, "{0:MM/dd/yyyy}")
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Format:</td>
+                    <td>
+                        <label>
+                            <input type="radio" name="exportformat" value="pdf" checked="checked" />
+                            PDF
+                        </label>
+                        <label>
+                            <input type="radio" name="exportformat" value="excel" />
+                            Excel
+                        </label>
+                    </td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Generate" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}

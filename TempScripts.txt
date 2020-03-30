@@ -1,0 +1,20 @@
+Alter table [dbo].[EMemberRegistration] alter column [Date_Of_Hire] Date
+Alter table [dbo].[EMemberRegistration] alter column [Dob] Date
+Alter table [dbo].[EMemberRegistration] alter column [Processed_Date] Date
+
+Alter table [dbo].[EMemberRegistration] Add [Mbr_Level1] nvarchar(20)
+Alter table [dbo].[EMemberRegistration] Add [Mbr_Level2] nvarchar(20)
+Alter table [dbo].[EMemberRegistration] Add [Mbr_Level3] nvarchar(20)
+Alter table [dbo].[EMemberRegistration] Add [Mbr_Type] nvarchar(20)
+
+Alter table [dbo].[EMemberRegistration] alter column [Tip_Contribution] NUMERIC(10,2)
+Alter table [dbo].[EMemberRegistration] Add [Employer_Name] nvarchar(100)
+
+
+--Update [EMemberRegistration] Set [Date_Of_Hire] = '20170201', Dob = '1990/03/15'
+
+Alter table [dbo].[EMemberRegistration] Add UpdateName bit not null default 0
+Alter table [dbo].[EMemberRegistration] Add UpdateAddress bit not null default 0
+Alter table [dbo].[EMemberRegistration] Add UpdateHouse bit not null default 0
+Alter table [dbo].[EMemberRegistration] Add UpdatePhone bit not null default 0
+Alter table [dbo].[EMemberRegistration] Add UpdateEmail bit not null default 0

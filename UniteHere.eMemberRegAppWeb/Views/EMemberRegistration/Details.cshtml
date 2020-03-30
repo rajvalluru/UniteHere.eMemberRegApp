@@ -1,0 +1,323 @@
+﻿@model UniteHere.eMemberRegApp.Entities.EMemberRegistration
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h3>@Html.DisplayFor(model => model.Processed_Status)</h3>
+
+<div>
+    <hr />
+    <div class="col-md-6 alert-success">
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.Label("First Name")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.First_Name)
+            </dd>
+
+            <dt>
+                @Html.Label("Last Name")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Last_Name)
+            </dd>
+
+            <dt>
+               @Html.Label("Middle Name")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Middle_Name)
+            </dd>
+
+            <dt>
+                @Html.Label("Date of Birth")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Dob)
+            </dd>
+
+            <dt>
+                @Html.Label("Address")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Address)
+            </dd>
+
+            @if (!string.IsNullOrEmpty(Model.Address_2)) {
+                    <dt>
+                        @Html.Label(" ")
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Address_2)
+                    </dd>
+            }
+
+            <dt>
+                @Html.Label("City")
+            </dt>
+            
+            <dd>
+                @Html.DisplayFor(model => model.City)
+            </dd>
+
+            <dt>
+                @Html.Label("State")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.State)
+            </dd>
+
+            <dt>
+                @Html.Label("Postal Code")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Postal_Code)
+            </dd>
+
+            <dt>
+                @Html.Label("Mobile Phone")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Mobile_Phone)
+            </dd>
+
+            <dt>
+                @Html.Label("Home Phone")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Home_Phone)
+            </dd>
+
+            <dt>
+                @Html.Label("Work Phone")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Work_Phone)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Race)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Race)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Gender)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Gender)
+            </dd>
+
+            @if (!string.IsNullOrEmpty(Model.Other_Gender)) {
+                    <dt>
+                        @Html.Label("Other Gender")
+                    </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.Other_Gender)
+                            </dd>
+                    }
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Ethnicity)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Ethnicity)
+            </dd>
+
+            <dt>
+                @Html.Label("First Language")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.First_Language)
+            </dd>
+
+            <dt>
+                @Html.Label("Second Language")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Second_Language)
+            </dd>
+        </dl>
+    </div>
+    <div class="col-md-6 alert-info" style="height:100%">
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.Label("Employer Id")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Employer_Union_Id)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Position)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Position)
+            </dd>
+            <dt>
+                @Html.Label("Hire Date")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Date_Of_Hire)
+            </dd>
+
+            <dt>
+                @Html.Label("Checkoff")
+            </dt>
+
+            <dd>
+                @{
+                    bool checkoff = !Model.Deduction_Opt_Out_Flag;
+                    @Html.DisplayFor(modelItem => checkoff)
+                }
+            </dd>
+
+            <dt>
+                @Html.Label("Tip Opt-In")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Tip_Opt_In_Flag)
+            </dd>
+
+            <dt>
+                @Html.Label("Tip Frequency")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Tip_Frequency)
+            </dd>
+
+            <dt>
+                @Html.Label("Tip Amount")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Tip_Contribution)
+            </dd>
+
+
+            <dt>
+                @Html.Label("SMS Opt-In")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Sms_Opt_In_Flag)
+            </dd>
+
+                <dt>
+                @Html.Label("Student")
+                </dt>
+
+                <dd>
+                @Html.DisplayFor(model => model.Student_Flag)
+                </dd>
+
+                <dt>
+                @Html.Label("Beneficiary")
+                </dt>
+
+                <dd>
+                @Html.DisplayFor(model => model.Beneficiary)
+                </dd>
+
+                <dt>
+                @Html.Label("Country Of Origin")
+                </dt>
+
+                <dd>
+                @Html.DisplayFor(model => model.Country_Of_Origin)
+                </dd>
+
+            @*<dt>
+                @Html.DisplayNameFor(model => model.Processed_Status)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Processed_Status)
+            </dd>*@
+
+            <dt>
+                @Html.Label("Registration Date")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CreatedOn)
+            </dd>
+
+            <dt>
+                @Html.Label("Dues Card Signed Date")
+            </dt>
+
+            <dd>
+                @if (Model.Dues_Card_Signed_Date != null) {
+                     @Html.Label(Model.Dues_Card_Signed_Date.Value.ToShortDateString())
+                } else {
+                     @Html.Label(" -  ")
+                }
+            </dd>
+
+            <dt>
+                @Html.Label("TIP Card Signed Date")
+            </dt>
+
+            <dd>
+                @if (Model.TIP_Card_Signed_Date != null) {
+                        @Html.Label(Model.TIP_Card_Signed_Date.Value.ToShortDateString())
+                } else {
+                        @Html.Label(" -  ")
+                }
+            </dd>
+
+            <dt>
+                @Html.Label("Dues Card File")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Dues_Card_File_Name)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Notes)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Notes)
+            </dd>
+        </dl>
+
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="col-md-12">
+    @*@Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |*@
+    @Html.ActionLink("Back to List", "History")
+</div>

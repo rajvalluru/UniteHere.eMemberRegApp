@@ -1,0 +1,12 @@
+﻿@using Microsoft.AspNet.Identity
+@using System.Security.Claims
+
+@if (Request.IsAuthenticated) {
+    var role = ((System.Security.Claims.ClaimsPrincipal)User).Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
+    if (role == "Super_Admin" || role == "Local_Admin") {
+        <ul class="nav navbar-nav navbar-left">
+            <li>@Html.ActionLink("Users", "Index", "Account", routeValues: null, htmlAttributes: new { @class = "nav" })</li>
+@*            <li>@Html.ActionLink("Users", "Index", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>*@
+        </ul>
+    }
+}

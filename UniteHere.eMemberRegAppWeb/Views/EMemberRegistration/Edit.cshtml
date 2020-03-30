@@ -1,0 +1,410 @@
+﻿@using System.Web.Mvc.Html;
+@model UniteHere.eMemberRegApp.Entities.EMemberRegistration
+
+@{
+  ViewBag.Title = "Edit";
+  var mbrData = (UniteHere.eMemberRegApp.Entities.MemberData)ViewData["MemberData"];
+  var mbrLevel1 = ViewData["MBR_LEVEL1"].ToString();
+  var mbrLevel2 = ViewData["MBR_LEVEL2"].ToString();
+  var mbrLevel3 = ViewData["MBR_LEVEL3"].ToString();
+  var mbrTypeCodes = (IEnumerable<SelectListItem>)ViewBag.MbrTypeCodes;
+  var mbrLevel1Codes = (IEnumerable<SelectListItem>)ViewBag.Mbrlevel1Codes;
+  var mbrLevel2Codes = (IEnumerable<SelectListItem>)ViewBag.Mbrlevel2Codes;
+  var mbrLevel3Codes = (IEnumerable<SelectListItem>)ViewBag.Mbrlevel3Codes;
+  var departmentCodes = (IEnumerable<SelectListItem>)ViewBag.DepartmentCodes;
+  var sectionCodes = (IEnumerable<SelectListItem>)ViewBag.SectionCodes;
+  var craftCodes = (IEnumerable<SelectListItem>)ViewBag.CraftCodes;
+  var fullPartTimeCodes = (IEnumerable<SelectListItem>)ViewBag.FullPartTimeCodes;
+  var discardCodes = (IEnumerable<SelectListItem>)ViewBag.DiscardReasonCodes;
+  // var displayConfirmMessage = (bool)ViewData["Show_ConfirmMessage"];
+  var showConfirmMessage = (ViewData["Show_ConfirmMessage"] ?? string.Empty) as string;
+  var displayConfirmMessage = string.IsNullOrEmpty(showConfirmMessage) ? false : true;
+  var displayErrorMessage = ((string)ViewData["Error"] ?? string.Empty) as string;
+  var confirmMessage = "Currently this member is on Checkoff deduction in the membership database, but on this current registration has opted out of Checkoff--please confirm that you have contacted the member and confirmed they want to switch from Checkoff deduction to Self-paying their dues, and you have notified the employer of this change. If the member opted-out of Checkoff by mistake they must re-register and this registration should be discarded after their new registration is completed. If you are unsure, please click on the Hold button to hold off on processing this registration until a later time.";
+  var nameLength = (string.IsNullOrEmpty(Model.First_Name) ? 0 : Model.First_Name.Length)  + (string.IsNullOrEmpty(Model.Middle_Name) ? 0 : Model.Middle_Name.Length) + (string.IsNullOrEmpty(Model.Last_Name) ? 0 : Model.Last_Name.Length);
+  var stateLength = (Model != null && !string.IsNullOrEmpty(Model.State) ? Model.State.Length : 0);
+}
+
+
+@using (Html.BeginForm()) {
+@Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.LocalNumber)
+    @Html.HiddenFor(model => model.Member_Union_Id)
+    @Html.HiddenFor(model => model.Employer_Name)
+    @Html.HiddenFor(model => model.CreatedBy)
+    @Html.HiddenFor(model => model.CreatedOn)
+    @Html.HiddenFor(model => model.RowVersion)
+    @Html.HiddenFor(model => model.Dues_Card_File_Name)
+    @Html.HiddenFor(model => model.Dues_Card_Image)
+    @Html.HiddenFor(model => model.Validated_Flag)
+    @Html.HiddenFor(model => model.Validation_Status)
+    @Html.HiddenFor(model => model.Tip_Opt_In_Flag)
+    <div class="alert-success row">
+        @*<div class="col-md-12">*@
+        <div class="col-md-6  pull-left">
+            <h4>
+                @Html.DisplayFor(model => model.Last_Name)  @Html.DisplayFor(model => model.Middle_Name)  @Html.DisplayFor(model => model.First_Name)
+            </h4>
+            <h5>Date of Birth: @Html.Label(Model.Dob.ToShortDateString())</h5>
+            <hr />
+        </div>
+        <div class="col-md-6  pull-right">
+            <h4>Employer: @Html.DisplayFor(model => model.Employer_Union_Id) - @Html.DisplayFor(model => model.Employer_Name) </h4>
+            <h5>
+                Hire Date: @if (Model.Date_Of_Hire != null) {
+                @Html.Label(Model.Date_Of_Hire.Value.ToShortDateString())
+                } else {
+                @Html.Label(" -  ")
+                }
+            </h5>
+            <hr />
+        </div>
+        @*</div>*@
+    </div>
+    <div class="alert-danger">
+        <div class="col-md-offset-2 row">
+            @if (!Html.ViewData.ModelState.IsValid) {
+                    @Html.Label("ERROR: ")@Html.ValidationSummary(true)
+            }
+            </div>
+        </div>
+        <div class="alert-warning row">
+            <div class="col-md-6 pull-left">
+                <div>
+                    <h5>
+                        @Html.DisplayFor(model => model.Address)  <br />
+                        @if (!string.IsNullOrEmpty(Model.Address_2)) { @Html.DisplayFor(model => model.Address_2) <br />}
+                        @Html.DisplayFor(model => model.City) @Html.DisplayFor(model => model.State) @Html.DisplayFor(model => model.Postal_Code) <br />
+                    </h5>
+                </div>
+                <div>
+                    <h5>
+                        Mobile:  @Html.DisplayFor(model => model.Mobile_Phone) <br />
+                        Home:  @Html.DisplayFor(model => model.Home_Phone)  <br />
+                        Work:  @Html.DisplayFor(model => model.Work_Phone)  <br />
+                        Email:  @Html.DisplayFor(model => model.Email)
+                    </h5>
+                </div>
+                <div>
+                    @{
+                      bool checkoff = !Model.Deduction_Opt_Out_Flag;
+                    }
+                    @Html.DisplayFor(modelItem => checkoff) Checkoff <br />
+                    @Html.DisplayFor(model => model.Sms_Opt_In_Flag) SMS Opt In <br />
+                    @Html.DisplayFor(model => model.Tip_Opt_In_Flag) TIP Contribution Opt In
+                    @if (Model.Tip_Opt_In_Flag) {
+                    <div class="col-md-offset-2">
+                        TIP Contribution Frequency :  @Html.DisplayFor(model => model.Tip_Frequency)<br />
+                        TIP Contribution Amount: @Html.DisplayFor(model => model.Tip_Contribution)
+                    </div>
+                    }
+                </div>
+                <div>
+                    <h5>
+                        @Html.DisplayFor(model => model.Student_Flag) Student <br />
+                        Beneficiary:  @Html.DisplayFor(model => model.Beneficiary)  <br />
+                        Country of Origin:  @Html.DisplayFor(model => model.Country_Of_Origin)<br />
+                    </h5>
+                </div>
+                <div>
+                    <h5>
+                        Dues Card Signed Date: @if (Model.Dues_Card_Signed_Date != null) {
+                        @Html.Label(Model.Dues_Card_Signed_Date.Value.ToShortDateString())
+                        } else {
+                        @Html.Label(" -  ")
+                        }
+                        TIP  Card Signed Date: @if (Model.TIP_Card_Signed_Date != null) {
+                        @Html.Label(Model.TIP_Card_Signed_Date.Value.ToShortDateString())
+                        } else {
+                        @Html.Label(" -  ")
+                        }
+                    </h5>
+                </div>
+            </div>
+            <div class="col-md-6 pull-right">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Position, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.Position, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Position, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                @if (Model.Validated_Flag && string.IsNullOrEmpty(Model.Member_Union_Id)) {
+                <div class="panel panel-default">
+                    <div class="panel-heading">Dues related info:</div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            @Html.Label("Member Type", htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.Mbr_Type, mbrTypeCodes)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label(@mbrLevel1, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @*@Html.DropDownListFor(model => model.Mbr_Level1, mbrLevel1Codes, new { @class = "appcombo", required = "required" })*@
+                                @Html.DropDownListFor(model => model.Mbr_Level1, mbrLevel1Codes, new { @class = "appcombo"})
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label(@mbrLevel2, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.Mbr_Level2, mbrLevel2Codes, new { @class = "appcombo" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label(@mbrLevel3, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.Mbr_Level3, mbrLevel3Codes, new { @class = "appcombo"})
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Employment related info:</div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            @Html.Label("Department", htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.Department, departmentCodes, new { @class = "appcombo" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Section", htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.Section, sectionCodes, new { @class = "appcombo" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Craft", htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.Craft, craftCodes, new { @class = "appcombo" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Full/Part Time", htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.FullPartTime, fullPartTimeCodes, new { @class = "appcombo" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                }
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">Notes:</div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            @Html.TextAreaFor(model => model.Notes, 3, 0, htmlAttributes: new { style = "width: 100%; max-width: 100%;" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("Discard Reason", htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.DropDownListFor(model => model.Discard_Reason, discardCodes, new { @class = "appcombo", onchange = "EnableDiscardBtn(this)" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.Validated_Flag && !string.IsNullOrEmpty(Model.Member_Union_Id)) {
+        <div class="row">
+            <div class="col-md-offset-1 col-md-6 alert-danger" style="border-radius:20px">
+                <br />
+                @foreach (var msg in (List<string>)ViewData["Comparison"]) {
+                        @Html.Label("", msg)
+                        <br />
+                    }
+        </div>
+
+        <div class="col-md-4">
+            @if ((bool)ViewData["Show_UpdateName"] || (bool)ViewData["Show_UpdateHouse"] || (bool)ViewData["Show_UpdateAddress"]) {
+                    <br />
+                    }
+            @if ((bool)ViewData["Show_UpdateName"]) {
+                    @Html.EditorFor(model => model.UpdateName) @Html.Label("Update Name")
+                    <br />
+                    }
+            @if ((bool)ViewData["Show_UpdateHouse"]) {
+                    @Html.EditorFor(model => model.UpdateHouse) @Html.Label("Update House")
+                    <br />
+                    }
+            @if ((bool)ViewData["Show_UpdateAddress"]) {
+                    @Html.EditorFor(model => model.UpdateAddress) @Html.Label("Update Address")
+                    <br />
+                    }
+        </div>
+    </div>
+        <div class="row">
+            <div class="col-md-offset-1 col-md-6 alert-info" style="border-radius:20px">
+                @if (mbrData.DuesCardExists) {
+                        @Html.Label("Dues Card exists in TIMSS!")
+                                } else {
+                        @Html.Label("No Dues Card!")
+                                }
+            </div>
+        </div>
+            if (Model.Tip_Opt_In_Flag) {
+            <div class="row">
+                <div class="col-md-offset-1 col-md-6 alert-danger" style="border-radius:20px">
+                    @if (mbrData.TimssTipData != null && mbrData.TimssTipData.Count > 0) {
+                    @Html.Label("", "Current TIP data in TIMSS:")
+                    <br />
+                        foreach (var msg in mbrData.TimssTipData) {
+                        @Html.Label("", msg)
+                        <br />
+                        }
+                    } else {
+                    @Html.Label("", "No TIP data in TIMSS!")
+                    }
+                </div>
+                <div class="col-md-4">
+                    @if ((bool)ViewData["Show_AddTip"]) {
+                    @Html.RadioButtonFor(model => model.TipActionCode, "Add", new { @checked = true }) @Html.Label("Add TIP")
+                    } else {
+                    @Html.RadioButtonFor(model => model.TipActionCode, "Update", new { @checked = true }) @Html.Label("Update TIP")
+                    }
+                    <br />
+                    @Html.RadioButtonFor(model => model.TipActionCode, "Ignore") @Html.Label("Ignore TIP")
+                </div>
+            </div>
+            }
+        }
+
+
+
+
+        @if (Model.Validated_Flag) {
+            if (displayConfirmMessage) {
+            <div class="alert-info">
+                <div class="col-md-12">
+                    <label for="confirm">
+                        <input type="checkbox" id="confirm" onclick="EnableDisableProcessBtn(this)" />
+                        Currently this member is on Checkoff deduction in the membership database, but on this current registration has opted out of Checkoff--please confirm that you have contacted the member and confirmed they want to switch from Checkoff deduction to Self-paying their dues, and you have notified the employer of this change. If the member opted-out of Checkoff by mistake they must re-register and this registration should be discarded after their new registration is completed. If you are unsure, please click on the Hold button to hold off on processing this registration until a later time.
+                    </label>
+                    <br />
+                </div>
+            </div>
+            }
+
+            if (Model.Tip_Contribution > 20) {
+            <div class="alert-info">
+                <div class="col-md-12">
+                    <label for="confirm">
+                        <input type="checkbox" id="confirm" onclick="EnableDisableProcessBtn(this)" />
+                        TIP Contribution is more than $20 -- please confirm that you have contacted the member and confirmed they want to contribute this amount. If the member entered the wrong amount, select ignore TIP.
+                    </label>
+                    <br />
+                </div>
+            </div>
+            }
+
+            if (string.IsNullOrEmpty(displayErrorMessage)) {
+            <div class="form-group row">
+                <div class="col-md-offset-6">
+                    <div>
+                        @if (IsPost || Html.ViewData.ModelState.IsValid ) {
+                        <div class="col-md-2">
+                            <input type="submit" name="Command" id="btnProcess" value="Process" class="btn btn-primary" @((displayConfirmMessage || Model.Tip_Contribution > 20 ? "disabled" : "")) />
+                        </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Member_Union_Id)) {
+                        <div class="col-md-1">
+                            <input type="submit" name="Command" value="Hold" class="btn btn-info" />
+                        </div>
+                        }
+                        <div class="col-md-1">
+                            <input type="submit" name="Command" id="btnDiscard" value="Discard" class="btn btn-danger" disabled />
+                        </div>
+                        <div class="col-md-offset-6">
+                            @*<input type="submit" name="Command" id="btnManual" value="Manual Attach" class="btn btn-primary"
+                                   data-toggle="modal" data-target="#confirm-manual" />*@
+                            <button type="button" class="btn btn-default" data-dismiss="modal" data-toggle="modal" data-target="#confirm-manual">Manual Attach</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            }
+
+        } else {
+        <div class="alert-danger">
+            <div class="col-md-offset-2 row">
+                @Html.Label(Model.Validation_Status)
+            </div>
+        </div>
+            <div class="col-md-1">
+                <input type="submit" name="Command" value="Hold" class="btn btn-info" />
+            </div>
+            <div class="col-md-1">
+                <input type="submit" name="Command" value="Discard" class="btn btn-danger" />
+            </div>
+            <div class="col-md-2">
+                @*<input type="submit" name="Command" value="Manual Attach" class="btn btn-primary"
+                       data-toggle="modal" data-target="#confirm-manual" />*@
+                <button type="button" class="btn btn-default" data-dismiss="modal"  data-toggle="modal" data-target="#confirm-manual" >Manual Attach</button>
+            </div>
+        }
+
+
+
+    <div class="modal fade" id="confirm-manual" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header alert-warning">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Confirm</h4>
+                </div>
+                <div class="modal-body">
+                    <p>You are choosing to attach this card manually. </p>
+                    <p>Download the member's card and bring up the member's record in TIMSS.  Rename the card the member's social security number and attach the member's card.</p>
+                    <p>Do you want to proceed?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    <input type="submit" name="Command" id="btnManual" value="Confirm Manual" class="btn btn-danger btn-ok"  />
+
+                    @*<a class="btn btn-danger btn-ok" data-dismiss="modal">Yes</a>*@
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    </div>
+
+
+
+                      }
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+<script type="text/javascript">
+    function EnableDisableProcessBtn(confirm) {
+        var btnProcess = document.getElementById("btnProcess");
+        btnProcess.disabled = confirm.checked ? false : true;
+    }
+    function EnableDiscardBtn(discardReason) {
+        var btnProcess = document.getElementById("btnDiscard");
+        btnProcess.disabled = false;
+    }
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
